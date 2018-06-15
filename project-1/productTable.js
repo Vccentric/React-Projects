@@ -1,6 +1,6 @@
 /**
  * ProductTable v1.0.0
- * This is a searchable product table data table using React.js
+ * This is a searchable product data table using React.js
  *
  * @author      Christopher Viray
  * @copyright   (c) 2018 Christopher Viray
