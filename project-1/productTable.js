@@ -22,12 +22,29 @@ const data = [
 class FilterableProductTable extends React.Component {
     constructor(props) {
         super(props);
+        this.handleSearchBarChange = this.handleSearchBarChange.bind(this);
+        this.handleInStockCheckboxChange = this.handleInStockCheckboxChange.bind(this);
+        this.state = {
+            'filterText': '',
+            'inStock': false
+        }
+    }
+
+    handleSearchBarChange(e) {
+        this.setState({ 'filterText': e.target.value });
+    }
+
+    handleInStockCheckboxChange(e) {
+        this.setState({ 'inStock': e.target.checked });
     }
 
     render() {
         return (
             <fieldset>
-                <SearchBar />
+                <SearchBar
+                    onChangeSearchBar={this.handleSearchBarChange}
+                    onChangeInStockCheckbox={this.handleInStockCheckboxChange}
+                />
                 <ProductTable />
             </fieldset>
         );
@@ -38,15 +55,25 @@ class FilterableProductTable extends React.Component {
 class SearchBar extends React.Component {
     constructor(props) {
         super(props);
+        this.handleSearchBarChange = this.handleSearchBarChange.bind(this);
+        this.handleInStockCheckboxChange = this.handleInStockCheckboxChange.bind(this);
+    }
+
+    handleSearchBarChange(e) {
+        this.props.onChangeSearchBar(e);
+    }
+
+    handleInStockCheckboxChange(e) {
+        this.props.onChangeInStockCheckbox(e);
     }
 
     render() {
         return (
             <fieldset>
-                <input type="text" name="search" placeholder="Search..." />
+                <input type="text" name="search" placeholder="Search..." onChange={this.handleSearchBarChange} />
                 <br />
-                <input type="checkbox" name="inStockOnly" id="inStockOnly" />
-                <label htmlFor="inStockOnly">Only show products in stock</label>
+                <input type="checkbox" name="inStock" id="inStock" onChange={this.handleInStockCheckboxChange} />
+                <label htmlFor="inStock">Only show products in stock</label>
             </fieldset>
         );
     }
