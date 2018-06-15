@@ -39,7 +39,24 @@ class FilterableProductTable extends React.Component {
     }
 
     render() {
-        let filterList = this.props.products;
+        // filter products based on filterText and inStock
+        const filterText = this.state.filterText;
+        const inStock = this.state.inStock;
+        let filterList = this.props.products.filter((product) => {
+            // check if showing only in stock items
+            if (inStock && product.stocked === false) {
+                return false;
+            } else {
+                // check for filtered text
+                if (filterText === '') { // empty
+                    return true;
+                } else if (product.name.toLowerCase().indexOf(filterText.toLowerCase()) !== -1) { // case-insensitive search
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
         return (
             <fieldset>
                 <SearchBar
