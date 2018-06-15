@@ -39,13 +39,14 @@ class FilterableProductTable extends React.Component {
     }
 
     render() {
+        let filterList = this.props.products;
         return (
             <fieldset>
                 <SearchBar
                     onChangeSearchBar={this.handleSearchBarChange}
                     onChangeInStockCheckbox={this.handleInStockCheckboxChange}
                 />
-                <ProductTable />
+                <ProductTable products={filterList} />
             </fieldset>
         );
     }
@@ -81,6 +82,15 @@ class SearchBar extends React.Component {
 
 // product table component
 function ProductTable(props) {
+    // create table list from products data
+    let listItems = props.products.map((product) => {
+        return (<ProductRow
+            key={product.name}
+            name={product.name}
+            price={product.price}
+            stocked={product.stocked}
+        />);
+    });
     return (
         <fieldset>
             <table>
@@ -90,10 +100,7 @@ function ProductTable(props) {
                         <th><b>Price</b></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <ProductCategoryRow />
-                    <ProductRow />
-                </tbody>
+                <tbody>{listItems}</tbody>
             </table>
         </fieldset>
     );
@@ -103,7 +110,7 @@ function ProductTable(props) {
 function ProductCategoryRow(props) {
     return (
         <tr>
-            <td colSpan="2"><b>Product Category</b></td>
+            <td colSpan="2"><b>{props.category}</b></td>
         </tr>
     );
 }
@@ -112,15 +119,15 @@ function ProductCategoryRow(props) {
 function ProductRow(props) {
     return (
         <tr>
-            <td>Product Name</td>
-            <td>Product Price</td>
+            <td style={!props.stocked ? { color: 'red' } : {}}>{props.name}</td>
+            <td>{props.price}</td>
         </tr>
     );
 }
 
 // app component
 function App() {
-    return <FilterableProductTable />;
+    return <FilterableProductTable products={data} />;
 }
 
 // initialize and render on the page
