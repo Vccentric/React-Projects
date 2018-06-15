@@ -99,14 +99,43 @@ class SearchBar extends React.Component {
 
 // product table component
 function ProductTable(props) {
+    const products = props.products.slice(); // create new copy
+    let category = null;
+
+    // function to sort product list by categories
+    products.sort((a, b) => {
+        // make case-insensitive
+        const categoryA = a.category.toLowerCase();
+        const categoryB = b.category.toLowerCase();
+
+        let comparison = 0;
+        if (categoryA > categoryB) {
+            comparison = 1;
+        } else if (categoryA < categoryB) {
+            comparison = -1;
+        }
+        return comparison;
+    });
+
     // create table list from products data
-    let listItems = props.products.map((product) => {
-        return (<ProductRow
+    let listItems = products.map((product) => {
+        let item = [];
+
+        // check category
+        if (category == null || category !== product.category) {
+            category = product.category;
+            item.push(<ProductCategoryRow key={category} category={category} />); // add category row
+        }
+
+        // create product row
+        item.push(<ProductRow
             key={product.name}
             name={product.name}
             price={product.price}
             stocked={product.stocked}
         />);
+
+        return item;
     });
     return (
         <fieldset>
