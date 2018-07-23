@@ -16,10 +16,13 @@ class SignupForm extends React.Component {
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.state = {
             'firstName': '',
-            'lastName': ''
+            'lastName': '',
+            'email': '',
+            'password': ''
         }
     }
 
+    // function to handle input change
     handleInputChange(e) {
         const target = e.target;
         const value = target.value;
@@ -29,6 +32,7 @@ class SignupForm extends React.Component {
         });
     }
 
+    // function to handle form submit
     handleFormSubmit(e) {
         e.preventDefault();
         let msg = "These were the values submitted into the Signup Form:\n";
@@ -43,15 +47,60 @@ class SignupForm extends React.Component {
             <fieldset>
                 <form onSubmit={this.handleFormSubmit}>
                     <h3>Signup Form</h3>
-                    <label htmlFor="firstName">First Name: </label>
-                    <input type="text" id="firstName" name="firstName" value={this.state.firstName} onChange={this.handleInputChange} />
-                    <br /><br />
-                    <label htmlFor="lastName">Last Name: </label>
-                    <input type="text" id="lastName" name="lastName" value={this.state.lastName} onChange={this.handleInputChange} />
-                    <br /><br />
+                    <InputField
+                        type='text'
+                        name='firstName'
+                        label='First Name'
+                        value={this.state.firstName}
+                        handleInputChange={this.handleInputChange}
+                    />
+                    <InputField
+                        type='text'
+                        name='lastName'
+                        label='Last Name'
+                        value={this.state.lastName}
+                        handleInputChange={this.handleInputChange}
+                    />
+                    <InputField
+                        type='text'
+                        name='email'
+                        label='Email'
+                        value={this.state.email}
+                        handleInputChange={this.handleInputChange}
+                    />
+                    <InputField
+                        type='password'
+                        name='password'
+                        label='Password'
+                        value={this.state.password}
+                        handleInputChange={this.handleInputChange}
+                    />
                     <input type="submit" value="Submit" />
                 </form>
             </fieldset>
+        );
+    }
+}
+
+// input field component
+class InputField extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    // function to handle input change
+    handleInputChange(e) {
+        this.props.handleInputChange(e);
+    }
+
+    render() {
+        return (
+            <div>
+                <label htmlFor={this.props.name}>{this.props.label}: </label>
+                <input type={this.props.type} id={this.props.name} name={this.props.name} value={this.props.value} onChange={this.handleInputChange} />
+                <br /><br />
+            </div>
         );
     }
 }

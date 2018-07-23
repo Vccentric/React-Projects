@@ -1,5 +1,5 @@
 # React-Projects
-This is a collection of projects made with React.js
+This is a collection of small projects made with React.js
 
 ## Project #1: Searchable Product Data Table
 This is a searchable product data table. This project follows the example being used in the [React Documentation](https://reactjs.org/docs/thinking-in-react.html).
