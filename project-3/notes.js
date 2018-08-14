@@ -8,7 +8,16 @@
  * @version     1.0.0
  */
 
-// notes form component
+// list of sample notes data
+const data = [
+    { title: 'note title 1', text: 'this is text inside the notes. 32kjb32k 3j2h3kj2 3hk2j3hj32 k3hk23jh23 3kjhk' },
+    { title: '', text: 'this is text inside the notes. nk2uiduh h32 k32h kj3jhk323h kjhkhkh322dkjk' },
+    { title: 'note title 2', text: 'this is text inside the notes. fdkfk fhkhek kejhekhek jkewhkehkehew' },
+    { title: 'note title 3', text: 'this is text inside the notes. fdjkhehkbekweb jkfdhjkdfs kfkfbkkkbj' },
+    { title: '', text: 'this is text inside the notes. lsfljdljldfdfl' }
+];
+
+// note form component
 class NoteForm extends React.Component {
     constructor(props) {
         super(props);
@@ -61,8 +70,27 @@ class NoteForm extends React.Component {
     }
 }
 
+// notes listing component
+function NotesListing(props) {
+    let listing = props.data.map((note, index) => {
+        let text = (note && note.title !== '') ? note.title : note.text;
+        return <ListItem key={index} text={text} />
+    });
+    return (
+        <fieldset>
+            <label>Notes:</label>
+            <ul>{listing}</ul>
+        </fieldset>
+    );
+}
+
+// list item component
+function ListItem(props) {
+    return <li>{props.text}</li>;
+}
+
 // initialize and render on the page
 ReactDOM.render(
-    <NoteForm placeholder="Enter Text" />,
+    <NotesListing data={data} />,
     document.getElementById('root')
 );
