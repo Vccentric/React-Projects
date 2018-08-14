@@ -8,15 +8,16 @@
  * @version     1.0.0
  */
 
-// input field component
-class InputField extends React.Component {
+// notes form component
+class NoteForm extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.clear = this.clear.bind(this);
         this.create = this.create.bind(this);
         this.state = {
-            value: ''
+            value: '',
+            readOnly: false
         };
     }
 
@@ -38,11 +39,23 @@ class InputField extends React.Component {
     render() {
         return (
             <fieldset>
-                <textarea value={this.state.value} onChange={this.handleChange} placeholder="Enter Text"></textarea>
-                <div>
-                    <button onClick={this.clear}>Clear</button>
-                    <button onclick={this.create}>Enter</button>
-                </div>
+                <textarea
+                    name="input-1"
+                    maxLength="1000"
+                    rows="40"
+                    cols="100"
+                    style={{ resize: 'none' }}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    placeholder={this.props.placeholder}
+                    readOnly={this.state.readOnly}
+                ></textarea>
+                {!this.state.readOnly &&
+                    <div>
+                        <button onClick={this.clear}>Clear</button>
+                        <button onClick={this.create}>Enter</button>
+                    </div>
+                }
             </fieldset>
         );
     }
@@ -50,6 +63,6 @@ class InputField extends React.Component {
 
 // initialize and render on the page
 ReactDOM.render(
-    <InputField />,
+    <NoteForm placeholder="Enter Text" />,
     document.getElementById('root')
 );
