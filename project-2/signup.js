@@ -1,6 +1,6 @@
 /**
  * Signup v1.0.0
- * This is a signup page built using React.js
+ * This is a signup page built with React.js
  *
  * @author      Christopher Viray
  * @copyright   (c) 2018 Christopher Viray
