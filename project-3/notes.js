@@ -17,13 +17,75 @@ const data = [
     { title: '', text: 'this is text inside the notes. lsfljdljldfdfl' }
 ];
 
+// notes container component
+class NotesContainer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.createForm = this.createForm.bind(this);
+        this.createFormSubmit = this.createFormSubmit.bind(this);
+        this.createFormClose = this.createFormClose.bind(this);
+        this.state = { // default values
+            mode: 'list'
+        };
+        this.notes = (this.props.data) ? this.props.data : [];
+    }
+
+    // function to handle create button
+    createForm(event) {
+        this.setState({ mode: 'create' });
+    }
+
+    // function to handle create form submit
+    createFormSubmit(event, note) {
+        this.notes.push(note);
+        this.setState({ mode: 'list' });
+    }
+
+    // function to handle closing the create form
+    createFormClose(event) {
+        this.setState({ mode: 'list' });
+    }
+
+    render() {
+        let element = null;
+
+        // check which view to render
+        switch (this.state.mode) {
+            case 'create':
+                element = (
+                    <NoteForm
+                        handleCreateFormSubmit={this.createFormSubmit}
+                        handleCreateFormClose={this.createFormClose}
+                    />
+                );
+                break;
+            case 'list':
+            default:
+                element = (
+                    <div>
+                        <h1>Notes:</h1>
+                        <button id="create" onClick={this.createForm}>Create</button>
+                        <NotesListing data={this.notes} />
+                    </div>
+                );
+                break;
+        }
+
+        // render view
+        return (
+            <fieldset id="notes-container">{element}</fieldset>
+        );
+    }
+}
+
 // note form component
 class NoteForm extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.clear = this.clear.bind(this);
-        this.create = this.create.bind(this);
+        this.submit = this.submit.bind(this);
+        this.close = this.close.bind(this);
         this.state = {
             value: '',
             readOnly: false
@@ -36,18 +98,29 @@ class NoteForm extends React.Component {
     }
 
     // function to clear/empty the textarea
-    clear() {
+    clear(event) {
         this.setState({ value: '' });
     }
 
-    // function to create a new note from the data in the textarea
-    create() {
-        // todo
+    // function to submit and create a new note from the data in the textarea
+    submit(event) {
+        let note = {
+            title: '',
+            text: this.state.value
+        };
+        this.props.handleCreateFormSubmit(event, note);
+    }
+
+    // function to close the create form
+    close(event) {
+        this.props.handleCreateFormClose(event);
     }
 
     render() {
         return (
             <fieldset>
+                <label>Create Form:</label>
+                <br />
                 <textarea
                     name="input-1"
                     maxLength="1000"
@@ -56,15 +129,15 @@ class NoteForm extends React.Component {
                     style={{ resize: 'none' }}
                     value={this.state.value}
                     onChange={this.handleChange}
-                    placeholder={this.props.placeholder}
+                    placeholder={this.props.placeholder != undefined ? this.props.placeholder : 'Enter Text'}
                     readOnly={this.state.readOnly}
                 ></textarea>
-                {!this.state.readOnly &&
-                    <div>
-                        <button onClick={this.clear}>Clear</button>
-                        <button onClick={this.create}>Enter</button>
-                    </div>
-                }
+                <br />
+                <div>
+                    <button onClick={this.close}>Close</button>
+                    {!this.state.readOnly && <button onClick={this.clear}>Clear</button>}
+                    {!this.state.readOnly && <button onClick={this.submit}>Submit</button>}
+                </div>
             </fieldset>
         );
     }
@@ -78,7 +151,6 @@ function NotesListing(props) {
     });
     return (
         <fieldset>
-            <label>Notes:</label>
             <ul>{listing}</ul>
         </fieldset>
     );
@@ -91,6 +163,6 @@ function ListItem(props) {
 
 // initialize and render on the page
 ReactDOM.render(
-    <NotesListing data={data} />,
+    <NotesContainer data={data} />,
     document.getElementById('root')
 );
