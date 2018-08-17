@@ -83,6 +83,7 @@ class SignupForm extends React.Component {
                         type='text'
                         name='firstName'
                         label='First Name'
+                        placeholder='Please enter your first name.'
                         value={this.state.firstName}
                         handleInputChange={this.handleInputChange}
                     />
@@ -90,6 +91,7 @@ class SignupForm extends React.Component {
                         type='text'
                         name='lastName'
                         label='Last Name'
+                        placeholder='Please enter your last name.'
                         value={this.state.lastName}
                         handleInputChange={this.handleInputChange}
                     />
@@ -97,6 +99,7 @@ class SignupForm extends React.Component {
                         type='text'
                         name='email'
                         label='Email'
+                        placeholder='Please enter your email address.'
                         value={this.state.email}
                         handleInputChange={this.handleInputChange}
                     />
@@ -104,6 +107,7 @@ class SignupForm extends React.Component {
                         type='password'
                         name='password'
                         label='Password'
+                        placeholder='Please enter a password.'
                         value={this.state.password}
                         handleInputChange={this.handleInputChange}
                     />
@@ -137,7 +141,9 @@ class InputField extends React.Component {
                     name={this.props.name}
                     value={this.props.value}
                     onChange={this.handleInputChange}
-                    placeholder={this.props.label}
+                    placeholder={this.props.placeholder}
+                    size='50'
+                    maxLength="50"
                 />
                 <br /><br />
             </div>
@@ -145,13 +151,8 @@ class InputField extends React.Component {
     }
 }
 
-// app component
-function App() {
-    return <SignupForm />;
-}
-
 // initialize and render on the page
 ReactDOM.render(
-    <App />,
+    <SignupForm />,
     document.getElementById('root')
 );
