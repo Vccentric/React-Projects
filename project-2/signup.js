@@ -18,13 +18,18 @@ class SignupForm extends React.Component {
             'firstName': '',
             'lastName': '',
             'email': '',
-            'password': ''
+            'password': '',
+            'isSubmitted': false,
         }
+        this.results = { // submitted results
+            'valid': false,
+            'data': []
+        };
     }
 
     // function to handle input change
-    handleInputChange(e) {
-        const target = e.target;
+    handleInputChange(event) {
+        const target = event.target;
         const value = target.value;
         const name = target.name;
         this.setState({
@@ -33,87 +38,95 @@ class SignupForm extends React.Component {
     }
 
     // function to handle form submit
-    handleFormSubmit(e) {
-        e.preventDefault();
-
-        // validate input fields
-        let results = this.validate();
-        let msg = '';
-        if (results && results.pass) { // pass
-            msg = "These were the values submitted into the Signup Form:\n";
-            for (let field in this.state) {
-                msg += "- " + field + ': ' + this.state[field] + '\n';
-            }
-        } else { // fail
-            msg = "Error:\n";
-            for (let i = 0; i < results.errorMessages.length; i++) {
-                msg += results.errorMessages[i];
-            }
-        }
-
-        // display message
-        alert(msg);
+    handleFormSubmit(event) {
+        event.preventDefault();
+        this.validate(); // validate input fields
+        this.setState({ 'isSubmitted': true });
     }
 
     // function to handle input validations
-    validate(data) {
-        let results = { // default values
-            'pass': true,
-            'errorMessages': []
-        };
+    validate() {
+        let valid = true; // default
+        this.results.data = []; // reset
 
-        // check if input field is empty
-        for (let field in this.state) {
-            let value = this.state[field];
-            if (value === '') {
-                let error = "- the field: " + field + ', is required.\n';
-                results.errorMessages.push(error);
-                results.pass = false;
-            }
+        // check first name field
+        if (this.state.firstName === '') {
+            valid = false;
+            this.results.data.push({ 'name': 'firstName', 'value': 'Empty' });
         }
-        return results;
+
+        // check last name field
+        if (this.state.lastName === '') {
+            valid = false;
+            this.results.data.push({ 'name': 'lastName', 'value': 'Empty' });
+        }
+
+        // check email field
+        if (this.state.email === '') {
+            valid = false;
+            this.results.data.push({ 'name': 'email', 'value': 'Empty' });
+        }
+
+        // check password field
+        if (this.state.password === '') {
+            valid = false;
+            this.results.data.push({ 'name': 'password', 'value': 'Empty' });
+        }
+
+        // check results
+        if (valid) {
+            this.results.data.push({ 'name': 'firstName', 'value': this.state.firstName });
+            this.results.data.push({ 'name': 'lastName', 'value': this.state.lastName });
+            this.results.data.push({ 'name': 'email', 'value': this.state.email });
+            this.results.data.push({ 'name': 'password', 'value': this.state.password });
+        }
+        this.results.valid = valid; // set
     }
 
     render() {
         return (
-            <fieldset>
-                <form onSubmit={this.handleFormSubmit}>
-                    <h3>Signup Form</h3>
-                    <InputField
-                        type='text'
-                        name='firstName'
-                        label='First Name'
-                        placeholder='Please enter your first name.'
-                        value={this.state.firstName}
-                        handleInputChange={this.handleInputChange}
-                    />
-                    <InputField
-                        type='text'
-                        name='lastName'
-                        label='Last Name'
-                        placeholder='Please enter your last name.'
-                        value={this.state.lastName}
-                        handleInputChange={this.handleInputChange}
-                    />
-                    <InputField
-                        type='text'
-                        name='email'
-                        label='Email'
-                        placeholder='Please enter your email address.'
-                        value={this.state.email}
-                        handleInputChange={this.handleInputChange}
-                    />
-                    <InputField
-                        type='password'
-                        name='password'
-                        label='Password'
-                        placeholder='Please enter a password.'
-                        value={this.state.password}
-                        handleInputChange={this.handleInputChange}
-                    />
-                    <input type="submit" value="Submit" />
-                </form>
-            </fieldset>
+            <div>
+                <fieldset>
+                    <form onSubmit={this.handleFormSubmit}>
+                        <h3>Signup Form</h3>
+                        <InputField
+                            type='text'
+                            name='firstName'
+                            label='First Name'
+                            placeholder='Please enter your first name.'
+                            value={this.state.firstName}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <InputField
+                            type='text'
+                            name='lastName'
+                            label='Last Name'
+                            placeholder='Please enter your last name.'
+                            value={this.state.lastName}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <InputField
+                            type='text'
+                            name='email'
+                            label='Email'
+                            placeholder='Please enter your email address.'
+                            value={this.state.email}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <InputField
+                            type='password'
+                            name='password'
+                            label='Password'
+                            placeholder='Please enter a password.'
+                            value={this.state.password}
+                            handleInputChange={this.handleInputChange}
+                        />
+                        <input type="submit" value="Submit" />
+                    </form>
+                </fieldset>
+                <br />
+                {this.state.isSubmitted && <ResultsTable results={this.results} />}
+            </div>
         );
     }
 }
@@ -149,6 +162,37 @@ class InputField extends React.Component {
             </div>
         );
     }
+}
+
+// results table component
+function ResultsTable(props) {
+    let items = props.results.data.map((item, index) => {
+        return <TableItem key={index} name={item.name} value={item.value} />;
+    });
+    return (
+        <fieldset>
+            <h3>{props.results.valid ? 'Results Submitted:' : 'Form Error:'}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Field Value</th>
+                    </tr>
+                </thead>
+                <tbody>{items}</tbody>
+            </table>
+        </fieldset>
+    );
+}
+
+// table item component
+function TableItem(props) {
+    return (
+        <tr>
+            <td>{props.name}</td>
+            <td>{props.value}</td>
+        </tr>
+    );
 }
 
 // initialize and render on the page
