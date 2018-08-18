@@ -65,12 +65,18 @@ class SignupForm extends React.Component {
         if (this.state.email === '') {
             valid = false;
             this.results.data.push({ 'name': 'email', 'value': 'Empty' });
+        } else if (this.state.email.length < 7) {
+            valid = false;
+            this.results.data.push({ 'name': 'email', 'value': 'Min of 7 Chars' });
         }
 
         // check password field
         if (this.state.password === '') {
             valid = false;
             this.results.data.push({ 'name': 'password', 'value': 'Empty' });
+        } else if (this.state.password.length < 3) {
+            valid = false;
+            this.results.data.push({ 'name': 'password', 'value': 'Min of 3 Chars' });
         }
 
         // check results
@@ -175,8 +181,8 @@ function ResultsTable(props) {
             <table>
                 <thead>
                     <tr>
-                        <th>Field Name</th>
-                        <th>Field Value</th>
+                        <th>Name</th>
+                        <th>Value</th>
                     </tr>
                 </thead>
                 <tbody>{items}</tbody>
