@@ -24,6 +24,7 @@ class NotesContainer extends React.Component {
         this.createForm = this.createForm.bind(this);
         this.createFormSubmit = this.createFormSubmit.bind(this);
         this.createFormClose = this.createFormClose.bind(this);
+        this.clickListItem = this.clickListItem.bind(this);
         this.state = { // default values
             mode: 'list'
         };
@@ -46,6 +47,11 @@ class NotesContainer extends React.Component {
         this.setState({ mode: 'list' });
     }
 
+    // function to handle the click action of the List Item
+    clickListItem(event) {
+        // TODO
+    }
+
     render() {
         let element = null;
 
@@ -65,7 +71,7 @@ class NotesContainer extends React.Component {
                     <div>
                         <h1>Notes:</h1>
                         <button id="create" onClick={this.createForm}>Create</button>
-                        <NotesListing data={this.notes} />
+                        <NotesListing data={this.notes} handleClickListItem={this.clickListItem} />
                     </div>
                 );
                 break;
@@ -147,21 +153,45 @@ class NoteForm extends React.Component {
 }
 
 // notes listing component
-function NotesListing(props) {
-    let listing = props.data.map((note, index) => {
-        let text = (note && note.title !== '') ? note.title : note.text;
-        return <ListItem key={index} text={text} />
-    });
-    return (
-        <fieldset>
-            <ul>{listing}</ul>
-        </fieldset>
-    );
+class NotesListing extends React.Component {
+    constructor(props) {
+        super(props);
+        this.clickListItem = this.clickListItem.bind(this);
+    }
+
+    // function to handle the click action of the List Item
+    clickListItem(event) {
+        this.props.handleClickListItem(event);
+    }
+
+    render() {
+        let listing = this.props.data.map((note, index) => {
+            let text = (note && note.title !== '') ? note.title : note.text;
+            return <ListItem key={index} text={text} handleClickListItem={this.clickListItem} />
+        });
+        return (
+            <fieldset>
+                <ul>{listing}</ul>
+            </fieldset>
+        );
+    }
 }
 
 // list item component
-function ListItem(props) {
-    return <li>{props.text}</li>;
+class ListItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.clickListItem = this.clickListItem.bind(this);
+    }
+
+    // function to handle the click action of the List Item
+    clickListItem(event) {
+        this.props.handleClickListItem(event);
+    }
+
+    render() {
+        return <li onClick={this.clickListItem}>{this.props.text}</li>;
+    }
 }
 
 // initialize and render on the page
