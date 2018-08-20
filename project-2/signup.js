@@ -50,15 +50,21 @@ class SignupForm extends React.Component {
         this.results.data = []; // reset
 
         // check first name field
-        if (this.state.firstName === '') {
+        if (this.state.firstName === '') { // Empty
             valid = false;
             this.results.data.push({ 'name': 'firstName', 'value': 'Empty' });
+        } else if (!this.state.firstName.match(/^[a-zA-Z]*$/)) { // Only Letters
+            valid = false;
+            this.results.data.push({ 'name': 'firstName', 'value': 'Only Letters' });
         }
 
         // check last name field
-        if (this.state.lastName === '') {
+        if (this.state.lastName === '') { // Empty
             valid = false;
             this.results.data.push({ 'name': 'lastName', 'value': 'Empty' });
+        } else if (!this.state.lastName.match(/^[a-zA-Z]*$/)) { // Only Letters
+            valid = false;
+            this.results.data.push({ 'name': 'lastName', 'value': 'Only Letters' });
         }
 
         // check email field
