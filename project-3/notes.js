@@ -104,11 +104,14 @@ class NoteForm extends React.Component {
 
     // function to submit and create a new note from the data in the textarea
     submit(event) {
-        let note = {
-            title: '',
-            text: this.state.value
-        };
-        this.props.handleCreateFormSubmit(event, note);
+        // defensive check
+        if (this.state.value !== '') { // cannot be empty
+            let note = {
+                title: '',
+                text: this.state.value
+            };
+            this.props.handleCreateFormSubmit(event, note);
+        }
     }
 
     // function to close the create form
