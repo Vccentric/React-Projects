@@ -29,6 +29,7 @@ class NotesContainer extends React.Component {
             mode: 'list'
         };
         this.notes = (this.props.data) ? this.props.data : [];
+        this.selectedNote = null;
     }
 
     // function to handle create button
@@ -50,7 +51,18 @@ class NotesContainer extends React.Component {
 
     // function to handle the click action of the List Item
     clickListItem(event) {
-        // TODO
+        let id = parseInt(event.target.getAttribute('data-id'));
+
+        // filter notes
+        let sNote = this.notes.filter((note) => {
+            return note.id === id;
+        });
+
+        // defensive check
+        if (sNote.length && sNote[0]) {
+            this.selectedNote = sNote[0];
+        }
+        this.setState({ mode: 'view' });
     }
 
     render() {
@@ -62,6 +74,15 @@ class NotesContainer extends React.Component {
                 element = (
                     <NoteForm
                         handleCreateFormSubmit={this.createFormSubmit}
+                        handleCreateFormClose={this.createFormClose}
+                    />
+                );
+                break;
+            case 'view':
+                element = (
+                    <NoteForm
+                        note={this.selectedNote}
+                        readOnly={true}
                         handleCreateFormClose={this.createFormClose}
                     />
                 );
@@ -94,8 +115,8 @@ class NoteForm extends React.Component {
         this.submit = this.submit.bind(this);
         this.close = this.close.bind(this);
         this.state = {
-            value: '',
-            readOnly: false
+            value: (this.props.note && this.props.note.text) ? this.props.note.text : '',
+            readOnly: (this.props.readOnly) ? this.props.readOnly : false
         };
     }
 
@@ -130,7 +151,7 @@ class NoteForm extends React.Component {
     render() {
         return (
             <fieldset>
-                <label>Create Form:</label>
+                <label>{this.state.readOnly ? 'View Note:' : 'Create Form:'}</label>
                 <br />
                 <textarea
                     name="input-1"
