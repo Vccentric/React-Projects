@@ -110,24 +110,31 @@ class NotesContainer extends React.Component {
 class NoteForm extends React.Component {
     constructor(props) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeTitle = this.handleChangeTitle.bind(this);
+        this.handleChangeText = this.handleChangeText.bind(this);
         this.clear = this.clear.bind(this);
         this.submit = this.submit.bind(this);
         this.close = this.close.bind(this);
         this.state = {
-            value: (this.props.note && this.props.note.text) ? this.props.note.text : '',
+            title: (this.props.note && this.props.note.title) ? this.props.note.title : '',
+            text: (this.props.note && this.props.note.text) ? this.props.note.text : '',
             readOnly: (this.props.readOnly) ? this.props.readOnly : false
         };
     }
 
-    // function to handle changes in the textarea
-    handleChange(event) {
-        this.setState({ value: event.target.value });
+    // function to handle changes to the title
+    handleChangeTitle(event) {
+        this.setState({ title: event.target.value });
+    }
+
+    // function to handle changes to the text
+    handleChangeText(event) {
+        this.setState({ text: event.target.value });
     }
 
     // function to clear/empty the textarea
     clear(event) {
-        this.setState({ value: '' });
+        this.setState({ title: '', text: '' });
     }
 
     // function to submit and create a new note from the data in the textarea
@@ -136,8 +143,8 @@ class NoteForm extends React.Component {
         if (this.state.value !== '') { // cannot be empty
             let note = {
                 id: '',
-                title: '',
-                text: this.state.value
+                title: this.state.title,
+                text: this.state.text
             };
             this.props.handleCreateFormSubmit(event, note);
         }
@@ -152,19 +159,30 @@ class NoteForm extends React.Component {
         return (
             <fieldset>
                 <label>{this.state.readOnly ? 'View Note:' : 'Create Form:'}</label>
-                <br />
+                <br /><br />
+                <input
+                    type="text"
+                    name="title"
+                    size='100'
+                    maxLength="100"
+                    value={this.state.title}
+                    onChange={this.handleChangeTitle}
+                    placeholder="Enter Title"
+                    readOnly={this.state.readOnly}
+                />
+                <br /><br />
                 <textarea
-                    name="input-1"
+                    name="text"
                     maxLength="1000"
                     rows="40"
                     cols="100"
                     style={{ resize: 'none' }}
-                    value={this.state.value}
-                    onChange={this.handleChange}
+                    value={this.state.text}
+                    onChange={this.handleChangeText}
                     placeholder={this.props.placeholder != undefined ? this.props.placeholder : 'Enter Text'}
                     readOnly={this.state.readOnly}
                 ></textarea>
-                <br />
+                <br /><br />
                 <div>
                     <button onClick={this.close}>Close</button>
                     {!this.state.readOnly && <button onClick={this.clear}>Clear</button>}
