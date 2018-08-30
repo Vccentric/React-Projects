@@ -39,8 +39,16 @@ class NotesContainer extends React.Component {
 
     // function to handle create form submit
     createFormSubmit(event, note) {
-        note.id = this.notes.length + 1; // quick fix for now
-        this.notes.push(note);
+        if (note.id === null) { // create
+            note.id = this.notes[this.notes.length - 1].id + 1;
+            this.notes.push(note);
+        } else { // edit
+            let index = this.notes.findIndex((i) => i.id === note.id);
+            if (index !== -1) {
+                this.notes[index].title = note.title;
+                this.notes[index].text = note.text;
+            }
+        }
         this.setState({ mode: 'list' });
     }
 
@@ -73,6 +81,8 @@ class NotesContainer extends React.Component {
             case 'create':
                 element = (
                     <NoteForm
+                        note={null}
+                        readOnly={false}
                         handleCreateFormSubmit={this.createFormSubmit}
                         handleCreateFormClose={this.createFormClose}
                     />
@@ -83,6 +93,7 @@ class NotesContainer extends React.Component {
                     <NoteForm
                         note={this.selectedNote}
                         readOnly={true}
+                        handleCreateFormSubmit={this.createFormSubmit}
                         handleCreateFormClose={this.createFormClose}
                     />
                 );
@@ -115,7 +126,9 @@ class NoteForm extends React.Component {
         this.clear = this.clear.bind(this);
         this.submit = this.submit.bind(this);
         this.close = this.close.bind(this);
+        this.edit = this.edit.bind(this);
         this.state = {
+            noteID: (this.props.note && this.props.note.id) ? this.props.note.id : null,
             title: (this.props.note && this.props.note.title) ? this.props.note.title : '',
             text: (this.props.note && this.props.note.text) ? this.props.note.text : '',
             readOnly: (this.props.readOnly) ? this.props.readOnly : false
@@ -137,12 +150,17 @@ class NoteForm extends React.Component {
         this.setState({ title: '', text: '' });
     }
 
+    // function to edit the note's title/text
+    edit(event) {
+        this.setState({ readOnly: false });
+    }
+
     // function to submit and create a new note from the data in the textarea
     submit(event) {
         // defensive check
-        if (this.state.value !== '') { // cannot be empty
+        if (this.state.title !== '' && this.state.text !== '') { // cannot be empty
             let note = {
-                id: '',
+                id: this.state.noteID,
                 title: this.state.title,
                 text: this.state.text
             };
@@ -185,6 +203,7 @@ class NoteForm extends React.Component {
                 <br /><br />
                 <div>
                     <button onClick={this.close}>Close</button>
+                    {this.state.readOnly && <button onClick={this.edit}>Edit</button>}
                     {!this.state.readOnly && <button onClick={this.clear}>Clear</button>}
                     {!this.state.readOnly && <button onClick={this.submit}>Submit</button>}
                 </div>
