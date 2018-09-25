@@ -25,6 +25,7 @@ class NotesContainer extends React.Component {
         this.createFormSubmit = this.createFormSubmit.bind(this);
         this.createFormClose = this.createFormClose.bind(this);
         this.clickListItem = this.clickListItem.bind(this);
+        this.clickListDeleteButton = this.clickListDeleteButton.bind(this);
         this.state = { // default values
             mode: 'list',
             notes: (this.props.data) ? this.props.data : [],
@@ -78,6 +79,19 @@ class NotesContainer extends React.Component {
         this.setState({ mode: 'view' });
     }
 
+    // function to handle the click action of the List Delete Button
+    clickListDeleteButton(event) {
+        let id = parseInt(event.target.getAttribute('data-id'));
+        let notes = this.state.notes;
+
+        // filter notes
+        let index = notes.findIndex(note => note.id === id);
+        if (index !== -1) {
+            notes.splice(index, 1);
+            this.setState({ notes: notes });
+        }
+    }
+
     render() {
         let element = null;
 
@@ -109,7 +123,11 @@ class NotesContainer extends React.Component {
                     <div>
                         <h1>Notes:</h1>
                         <button id="create" onClick={this.createForm}>Create</button>
-                        <NotesListing data={this.state.notes} handleClickListItem={this.clickListItem} />
+                        <NotesListing
+                            data={this.state.notes}
+                            handleClickListItem={this.clickListItem}
+                            handleClickDeleteButton={this.clickListDeleteButton}
+                        />
                     </div>
                 );
                 break;
@@ -222,6 +240,7 @@ class NotesListing extends React.Component {
     constructor(props) {
         super(props);
         this.clickListItem = this.clickListItem.bind(this);
+        this.clickDeleteButton = this.clickDeleteButton.bind(this);
     }
 
     // function to handle the click action of the List Item
@@ -229,10 +248,23 @@ class NotesListing extends React.Component {
         this.props.handleClickListItem(event);
     }
 
+    // function to handle the click action of the Delete Button
+    clickDeleteButton(event) {
+        this.props.handleClickDeleteButton(event);
+    }
+
     render() {
         let listing = this.props.data.map((note, index) => {
             let text = (note && note.title !== '') ? note.title : note.text;
-            return <ListItem key={note.id} id={note.id} text={text} handleClickListItem={this.clickListItem} />
+            return (
+                <ListItem
+                    key={note.id}
+                    id={note.id}
+                    text={text}
+                    handleClickListItem={this.clickListItem}
+                    handleClickDeleteButton={this.clickDeleteButton}
+                />
+            );
         });
         return (
             <fieldset>
@@ -257,7 +289,7 @@ class ListItem extends React.Component {
 
     // function to handle the deletion for the item
     clickDeleteButton(event) {
-        // TODO
+        this.props.handleClickDeleteButton(event);
     }
 
     render() {
