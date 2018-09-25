@@ -242,6 +242,7 @@ class ListItem extends React.Component {
     constructor(props) {
         super(props);
         this.clickListItem = this.clickListItem.bind(this);
+        this.clickDeleteButton = this.clickDeleteButton.bind(this);
     }
 
     // function to handle the click action of the List Item
@@ -249,8 +250,18 @@ class ListItem extends React.Component {
         this.props.handleClickListItem(event);
     }
 
+    // function to handle the deletion for the item
+    clickDeleteButton(event) {
+        // TODO
+    }
+
     render() {
-        return <li data-id={this.props.id} onClick={this.clickListItem}>{this.props.text}</li>;
+        return (
+            <li>
+                <span data-id={this.props.id} onClick={this.clickListItem}>{this.props.text}</span>
+                <button data-id={this.props.id} onClick={this.clickDeleteButton}>Delete</button>
+            </li>
+        );
     }
 }
 
