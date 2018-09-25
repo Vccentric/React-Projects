@@ -10,11 +10,11 @@
 
 // list of sample notes data
 const data = [
-    { id: 1, title: 'note title 1', text: 'this is text inside the notes. 32kjb32k 3j2h3kj2 3hk2j3hj32 k3hk23jh23 3kjhk' },
-    { id: 2, title: '', text: 'this is text inside the notes. nk2uiduh h32 k32h kj3jhk323h kjhkhkh322dkjk' },
-    { id: 3, title: 'note title 2', text: 'this is text inside the notes. fdkfk fhkhek kejhekhek jkewhkehkehew' },
-    { id: 4, title: 'note title 3', text: 'this is text inside the notes. fdjkhehkbekweb jkfdhjkdfs kfkfbkkkbj' },
-    { id: 5, title: '', text: 'this is text inside the notes. lsfljdljldfdfl' }
+    { id: 1, title: 'title-1', text: 'this is text inside the notes. 32kjb32k 3j2h3kj2 3hk2j3hj32 k3hk23jh23 3kjhk' },
+    { id: 2, title: 'title-2', text: 'this is text inside the notes. nk2uiduh h32 k32h kj3jhk323h kjhkhkh322dkjk' },
+    { id: 3, title: 'title-3', text: 'this is text inside the notes. fdkfk fhkhek kejhekhek jkewhkehkehew' },
+    { id: 4, title: 'title-4', text: 'this is text inside the notes. fdjkhehkbekweb jkfdhjkdfs kfkfbkkkbj' },
+    { id: 5, title: 'title-5', text: 'this is text inside the notes. lsfljdljldfdfl' }
 ];
 
 // notes container component
@@ -26,9 +26,9 @@ class NotesContainer extends React.Component {
         this.createFormClose = this.createFormClose.bind(this);
         this.clickListItem = this.clickListItem.bind(this);
         this.state = { // default values
-            mode: 'list'
+            mode: 'list',
+            notes: (this.props.data) ? this.props.data : [],
         };
-        this.notes = (this.props.data) ? this.props.data : [];
         this.selectedNote = null;
     }
 
@@ -39,17 +39,22 @@ class NotesContainer extends React.Component {
 
     // function to handle create form submit
     createFormSubmit(event, note) {
+        let notes = this.state.notes;
         if (note.id === null) { // create
-            note.id = this.notes[this.notes.length - 1].id + 1;
-            this.notes.push(note);
+            note.id = notes[notes.length - 1].id + 1;
+            notes.push(note);
+            this.setState({
+                mode: 'list',
+                notes: notes
+            });
         } else { // edit
-            let index = this.notes.findIndex((i) => i.id === note.id);
+            let index = notes.findIndex((i) => i.id === note.id);
             if (index !== -1) {
-                this.notes[index].title = note.title;
-                this.notes[index].text = note.text;
+                notes[index].title = note.title;
+                notes[index].text = note.text;
             }
+            this.setState({ mode: 'list', });
         }
-        this.setState({ mode: 'list' });
     }
 
     // function to handle closing the create form
@@ -62,7 +67,7 @@ class NotesContainer extends React.Component {
         let id = parseInt(event.target.getAttribute('data-id'));
 
         // filter notes
-        let sNote = this.notes.filter((note) => {
+        let sNote = this.state.notes.filter((note) => {
             return note.id === id;
         });
 
@@ -104,7 +109,7 @@ class NotesContainer extends React.Component {
                     <div>
                         <h1>Notes:</h1>
                         <button id="create" onClick={this.createForm}>Create</button>
-                        <NotesListing data={this.notes} handleClickListItem={this.clickListItem} />
+                        <NotesListing data={this.state.notes} handleClickListItem={this.clickListItem} />
                     </div>
                 );
                 break;
