@@ -20,6 +20,7 @@ class SignupForm extends React.Component {
             'email': '',
             'password': '',
             'isSubmitted': false,
+            'gender': 'male',
         }
         this.results = { // submitted results
             'valid': false,
@@ -91,6 +92,7 @@ class SignupForm extends React.Component {
             this.results.data.push({ 'name': 'lastName', 'value': this.state.lastName });
             this.results.data.push({ 'name': 'email', 'value': this.state.email });
             this.results.data.push({ 'name': 'password', 'value': this.state.password });
+            this.results.data.push({ 'name': 'gender', 'value': this.state.gender });
         }
         this.results.valid = valid; // set
     }
@@ -133,6 +135,10 @@ class SignupForm extends React.Component {
                             value={this.state.password}
                             handleInputChange={this.handleInputChange}
                         />
+                        <GenderInput
+                            value={this.state.gender}
+                            handleInputChange={this.handleInputChange}
+                        />
                         <input type="submit" value="Submit" />
                     </form>
                 </fieldset>
@@ -170,6 +176,45 @@ class InputField extends React.Component {
                     size='50'
                     maxLength="50"
                 />
+                <br /><br />
+            </div>
+        );
+    }
+}
+
+// input field component
+class GenderInput extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    // function to handle input change
+    handleInputChange(e) {
+        this.props.handleInputChange(e);
+    }
+
+    render() {
+        return (
+            <div>
+                <label>Gender: </label>
+                <br />
+                <input
+                    type='radio'
+                    name='gender'
+                    value='male'
+                    checked={this.props.value === 'male'}
+                    onChange={this.handleInputChange}
+                />
+                <span>Male</span>
+                <input
+                    type='radio'
+                    name='gender'
+                    value='female'
+                    checked={this.props.value === 'female'}
+                    onChange={this.handleInputChange}
+                />
+                <span>Female</span>
                 <br /><br />
             </div>
         );
